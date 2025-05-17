@@ -78,7 +78,10 @@ class AdminController extends Controller
     // Riwayat absensi
     public function riwayatAbsensi()
     {
-        $riwayat = Absensi::with('user')->orderBy('tanggal', 'desc')->get();
+        $riwayat = Absensi::with(['user', 'jadwal'])
+            ->orderBy('tanggal', 'desc')
+            ->get();
+
         return view('admin.riwayat', compact('riwayat'));
     }
 }

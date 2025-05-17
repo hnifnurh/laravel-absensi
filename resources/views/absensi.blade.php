@@ -5,78 +5,122 @@
     <title>Halaman Absensi</title>
 </head>
 <body>
+    @php
+        $hadirHariIni = $userAbsensiHariIni->filter(fn($absen) => $absen->status === 'hadir');
+        $tidakHadirHariIni = $userAbsensiHariIni->filter(fn($absen) => $absen->status !== 'hadir');
+    @endphp
+
     <h2>Selamat datang, {{ Auth::user()->name }}</h2>
 
-    @if ($jadwalHariIni)
-        <h3>Presensi Hari Ini: {{ $jadwalHariIni->mata_kuliah }} ({{ \Carbon\Carbon::parse($jadwalHariIni->jam_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($jadwalHariIni->jam_selesai)->format('H:i') }})</h3>
-
+    {{-- Form Presensi untuk jadwal yang belum diabsen hari ini --}}
+    @foreach ($jadwalHariIni as $jadwal)
         @php
-            $userAbsensi = \App\Models\Absensi::where('user_id', Auth::id())
-                ->where('jadwal_id', $jadwalHariIni->id)
-                ->where('tanggal', \Carbon\Carbon::now()->format('Y-m-d'))
-                ->first();
+            $userAbsen = $userAbsensiHariIni->get($jadwal->id);
         @endphp
 
-        @if (!$userAbsensi)
-            <form method="POST" action="{{ route('absensi.submit-status') }}">
-                @csrf
-                <label>Status Kehadiran:</label>
-                <select name="status" required>
-                    <option value="hadir">Hadir</option>
-                    <option value="sakit">Sakit</option>
-                    <option value="izin">Izin</option>
-                </select>
-                <button type="submit">Kirim Presensi</button>
-            </form>
-        @else
-            <p>Anda sudah melakukan presensi dengan status: <strong>{{ ucfirst($userAbsensi->status) }}</strong></p>
+        @if (!$userAbsen)
+            <div style="margin-bottom: 20px;">
+                <h3>{{ $jadwal->mata_kuliah }} ({{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }})</h3>
+                <form method="POST" action="{{ route('absensi.submit-status') }}">
+                    @csrf
+                    <input type="hidden" name="jadwal_id" value="{{ $jadwal->id }}">
+                    <label>Status Kehadiran:</label>
+                    <select name="status" required>
+                        <option value="hadir">Hadir</option>
+                        <option value="sakit">Sakit</option>
+                        <option value="izin">Izin</option>
+                    </select>
+                    <button type="submit">Kirim</button>
+                </form>
+            </div>
         @endif
-    @else
-        <p><i>Belum ada jadwal absensi hari ini.</i></p>
+    @endforeach
+
+    {{-- Tabel Hadir Hari Ini --}}
+    @if ($hadirHariIni->count())
+        <h3>List Hadir Hari Ini</h3>
+        <table border="1" cellpadding="6" cellspacing="0" style="margin-bottom: 20px;">
+            <thead>
+                <tr>
+                    <th>Mata Kuliah</th>
+                    <th>Jam</th>
+                    <th>Keterangan</th>
+                    <th>Waktu Masuk</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($hadirHariIni as $absen)
+                    <tr>
+                        <td>{{ $absen->jadwal->mata_kuliah }}</td>
+                        <td>{{ $absen->jadwal->jam_mulai }} - {{ $absen->jadwal->jam_selesai }}</td>
+                        <td>{{ $absen->jadwal->keterangan ?? '-' }}</td>
+                        <td>{{ \Carbon\Carbon::parse($absen->waktu_masuk)->format('H:i:s') }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     @endif
 
-    <h3>Daftar Hadir Hari Ini</h3>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Nama</th>
-                <th>Jam Hadir</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($hadir as $item)
+    {{-- Tabel Tidak Hadir Hari Ini --}}
+    @if ($tidakHadirHariIni->count())
+        <h3>Telat / Alpha / Sakit / Izin Hari Ini</h3>
+        <table border="1" cellpadding="6" cellspacing="0" style="margin-bottom: 20px;">
+            <thead>
                 <tr>
-                    <td>{{ $item->user->name }}</td>
-                    <td>{{ $item->waktu_masuk ?? '-' }}</td>
+                    <th>Mata Kuliah</th>
+                    <th>Jam</th>
+                    <th>Keterangan</th>
+                    <th>Status</th>
+                    <th>Waktu Masuk</th>
                 </tr>
-            @empty
-                <tr><td colspan="2">Belum ada yang hadir hari ini.</td></tr>
-            @endforelse
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($tidakHadirHariIni as $absen)
+                    <tr>
+                        <td>{{ $absen->jadwal->mata_kuliah }}</td>
+                        <td>{{ $absen->jadwal->jam_mulai }} - {{ $absen->jadwal->jam_selesai }}</td>
+                        <td>{{ $absen->jadwal->keterangan ?? '-' }}</td>
+                        <td>{{ ucfirst($absen->status) }}</td>
+                        <td>{{ $absen->waktu_masuk ? \Carbon\Carbon::parse($absen->waktu_masuk)->format('H:i:s') : '-' }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
 
-    <h3>Telat / Alpha / Sakit / Izin</h3>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Nama</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($tidak_hadir as $item)
+    {{-- Riwayat Ketidakhadiran Lama --}}
+    <h3>Riwayat Ketidakhadiran Sebelumnya</h3>
+    @if ($userAbsensiTidakHadirSelamanya && $userAbsensiTidakHadirSelamanya->count())
+        <table border="1" cellpadding="6" cellspacing="0" style="margin-bottom: 20px;">
+            <thead>
                 <tr>
-                    <td>{{ $item->user->name }}</td>
-                    <td>{{ ucfirst($item->status) }}</td>
+                    <th>Tanggal</th>
+                    <th>Mata Kuliah</th>
+                    <th>Jam</th>
+                    <th>Keterangan</th>
+                    <th>Status</th>
+                    <th>Waktu Masuk</th>
                 </tr>
-            @empty
-                <tr><td colspan="2">Semua sudah hadir hari ini.</td></tr>
-            @endforelse
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($userAbsensiTidakHadirSelamanya as $absen)
+                    <tr>
+                        <td>{{ \Carbon\Carbon::parse($absen->tanggal)->format('d-m-Y') }}</td>
+                        <td>{{ $absen->jadwal->mata_kuliah }}</td>
+                        <td>{{ $absen->jadwal->jam_mulai }} - {{ $absen->jadwal->jam_selesai }}</td>
+                        <td>{{ $absen->jadwal->keterangan ?? '-' }}</td>
+                        <td>{{ ucfirst($absen->status) }}</td>
+                        <td>{{ $absen->waktu_masuk ? \Carbon\Carbon::parse($absen->waktu_masuk)->format('H:i:s') : '-' }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @else
+        <p>Tidak ada riwayat ketidakhadiran.</p>
+    @endif
 
     <br>
-    <form action="{{ route('logout') }}" method="POST">
+    <form action="{{ route('logout') }}" method="POST" style="max-width: 500px;">
         @csrf
         <button type="submit">Log Out</button>
     </form>
