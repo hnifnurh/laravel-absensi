@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Login Absensi</title>
 </head>
 <body>
-    <h2>Login</h2>
+    <h2>Selamat datang Di Page Absensi, Silahkan Login Dulu</h2>
 
     @if ($errors->any())
         <div style="color: red;">
@@ -18,15 +18,11 @@
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
-        <div>
-            <label>Email:</label>
-            <input type="email" name="email" value="{{ old('email') }}" required>
-        </div>
+            <label>Email:</label><br />
+            <input type="email" name="email" value="{{ old('email') }}" required><br /><br />
 
-        <div>
-            <label>Password:</label>
-            <input type="password" name="password" required>
-        </div>
+            <label>Password:</label><br />
+            <input type="password" name="password" required><br /><br />
 
         <button type="submit">Login</button>
     </form>
