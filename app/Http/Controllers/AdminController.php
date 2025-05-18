@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Jadwal;
 use App\Models\Absensi;
@@ -30,12 +32,23 @@ class AdminController extends Controller
     // Proses simpan user baru
     public function storeUser(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email',
             'password' => 'required|string|min:6',
             'role' => 'required|in:user,admin',
         ]);
+
+        // cek email unik manual di connection users_mysql
+        $exists = DB::connection('users_mysql')->table('users')->where('email', $request->email)->exists();
+        if ($exists) {
+            $validator->errors()->add('email', 'Email sudah digunakan.');
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         User::create([
             'name' => $request->name,

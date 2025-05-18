@@ -17,12 +17,12 @@ class Absensi extends Model
      // Relasi ke User
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id'); 
     }
 
     // Relasi ke Jadwal
     public function jadwal()
     {
-        return $this->belongsTo(Jadwal::class);
+        return $this->belongsTo(Jadwal::class, 'jadwal_id');
     }
 }

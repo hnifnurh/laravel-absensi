@@ -9,6 +9,9 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
+    protected $connection = 'mysql';
+
     public function up(): void
     {
         Schema::create('jadwals', function (Blueprint $table) {
