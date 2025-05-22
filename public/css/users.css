@@ -1,0 +1,70 @@
+/* Reset dan Layout Umum */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #333;
+}
+
+/* Heading */
+h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* Tautan Aksi */
+a {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    transition: background-color 0.3s;
+}
+
+a:hover {
+    background-color: #0056b3;
+}
+
+/* Tabel */
+table {
+    width: 90%;
+    max-width: 900px;
+    border-collapse: collapse;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+thead {
+    background-color: #343a40;
+    color: white;
+}
+
+th, td {
+    padding: 12px 16px;
+    border: 1px solid #dee2e6;
+    text-align: center;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+/* Tombol Kembali */
+a[href*="dashboard"] {
+    background-color: #6c757d;
+}
+
+a[href*="dashboard"]:hover {
+    background-color: #5a6268;
+}
