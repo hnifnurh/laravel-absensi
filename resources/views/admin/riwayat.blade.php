@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Riwayat Absensi</title>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/riwayat.css') }}">
 </head>
 <body>
     <h2>Riwayat Absensi</h2>

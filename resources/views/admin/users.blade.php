@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>List User</title>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/users.css') }}">
 </head>
 <body>
     <h2>List User</h2>

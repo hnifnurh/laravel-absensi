@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/dashboard.css') }}">
 </head>
 <body>
     <h2>Selamat Datang, {{ Auth::user()->name }} (Admin)</h2>

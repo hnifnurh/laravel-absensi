@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Tambah User</title>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/form.css') }}">
 </head>
 <body>
     <h2>Tambah User</h2>

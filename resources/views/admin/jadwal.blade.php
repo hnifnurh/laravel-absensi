@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Tambah Jadwal Absensi</title>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/jadwal.css') }}">
 </head>
 <body>
     <h2>Tambah Jadwal Absensi</h2>

@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Login Absensi</title>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/login.css') }}">
 </head>
 <body>
     <h2>Selamat datang Di Page Absensi, Silahkan Login Dulu</h2>

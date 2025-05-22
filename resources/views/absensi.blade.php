@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Halaman Absensi</title>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/absensi.css') }}">
 </head>
 <body>
     @php
