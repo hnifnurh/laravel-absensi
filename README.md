@@ -127,4 +127,4 @@ Refer to the following usernames and passwords for seeded users (adjust based on
 | Role    | Username       | email                 | Password    |
 | ------- | -------------- | --------------------- | ----------- |
 | Admin   | Admin          | admin@example.com     | password123 |
-| Manager | User           | user@example.com      | password123 |
+| User    | User           | user@example.com      | password123 |
