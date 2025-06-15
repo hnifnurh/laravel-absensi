@@ -52,8 +52,6 @@ composer install
    SESSION_COOKIE=web_absensi_session
    CACHE_STORE=file
    QUEUE_CONNECTION=database
-
-   VITE_BASE_URL=http://localhost
    ```
 
    ```config/database.php
