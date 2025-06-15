@@ -15,6 +15,10 @@ cd laravel-absensi
 
 #### Backend
 
+```bash
+composer install
+```
+
 ### Step 3: Environment Configuration
 
 1. Copy the `.env` file:
