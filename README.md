@@ -23,7 +23,7 @@ composer install
 
 1. Copy the `.env` file:
    ```bash
-   cp .env.example .env
+   cp .env.example.fix .env
    ```
 2. Update the `.env` and `config/database.php` file with your local configuration:
 
